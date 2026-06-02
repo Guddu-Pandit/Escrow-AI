@@ -24,8 +24,8 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TrustChain",
-  description: "Freelance work, secured by AI and blockchain.",
+  title: "TrustChain - AI contracts, Solana escrow, and verified freelancer reviews",
+  description: "Freelance work, secured by AI and blockchain. Describe your project in plain language. AI generates the contract, Solana locks the funds, and payment releases the moment milestones are approved.",
 };
 
 export default function RootLayout({
@@ -38,6 +38,9 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${syne.variable} ${dmMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

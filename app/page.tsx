@@ -1,1094 +1,459 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
-
-declare global {
-  interface Window {
-    solana?: {
-      isPhantom?: boolean;
-      publicKey?: { toString: () => string };
-      connect?: () => Promise<void>;
-      disconnect?: () => Promise<void>;
-    };
-  }
-}
-
-const BRAND_BG = "#0B1A14";
-const BRAND_TEAL = "#1D9E75";
-const CARD_BG = "#111F18";
-
 export default function Home() {
-  const phantomDetected = typeof window !== "undefined" && !!window.solana;
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-
-  const shortWallet = useMemo(() => {
-    if (!walletAddress) return null;
-    return `${walletAddress.slice(0, 4)}…${walletAddress.slice(-4)}`;
-  }, [walletAddress]);
-
-  function onConnectWallet() {
-    // Stub behavior. If Phantom is present, we still avoid real RPC and just
-    // surface a plausible address for UI purposes.
-    if (walletAddress) {
-      setWalletAddress(null);
-      return;
-    }
-
-    const phantomKey = window.solana?.publicKey?.toString?.();
-    setWalletAddress(phantomKey ?? "9fA3…kQ2V7rQX7yqk5b6c7d8e9f0a1b2c3d4e5f6");
-  }
-
   return (
-    <div
-      className="min-h-screen text-zinc-100"
-      style={{ backgroundColor: BRAND_BG }}
-    >
-      {/* ambient teal glow */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(1000px_650px_at_15%_8%,rgba(29,158,117,0.22),transparent_60%),radial-gradient(900px_500px_at_85%_10%,rgba(29,158,117,0.14),transparent_60%),radial-gradient(1100px_750px_at_50%_95%,rgba(29,158,117,0.12),transparent_60%)]" />
-      <div className="pointer-events-none fixed inset-0 opacity-[0.07] [background-image:linear-gradient(to_right,rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.16)_1px,transparent_1px)] [background-size:64px_64px]" />
+    <>
+      <style jsx global>{`
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        h2.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+        .tc { font-family: 'Inter', sans-serif; background: #080F0C; color: #E8F5EF; overflow: hidden; }
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; border-bottom: 1px solid rgba(255,255,255,0.05); background: #080F0C; }
+        .nav-logo { display: flex; align-items: center; gap: 9px; font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+        .nav-logo-mark { width: 30px; height: 30px; background: #1D9E75; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 15px; }
+        .nav-links { display: flex; gap: 32px; }
+        .nav-link { font-size: 13px; color: rgba(255,255,255,0.45); cursor: pointer; transition: color 0.2s; letter-spacing: 0.01em; }
+        .nav-link:hover { color: #fff; }
+        .nav-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-ghost { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 500; padding: 7px 15px; border: 1px solid rgba(255,255,255,0.12); border-radius: 7px; background: transparent; color: rgba(255,255,255,0.65); cursor: pointer; letter-spacing: 0.01em; }
+        .btn-teal { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; padding: 7px 16px; border: none; border-radius: 7px; background: #1D9E75; color: #fff; cursor: pointer; }
+        .hero { padding: 72px 40px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+        .hero-left {}
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 7px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.25); border-radius: 20px; padding: 5px 12px; font-size: 11px; color: #5DCAA5; font-weight: 500; margin-bottom: 24px; font-family: 'Syne', sans-serif; letter-spacing: 0.04em; }
+        .hero-dot { width: 5px; height: 5px; background: #1D9E75; border-radius: 50%; }
+        .hero-h1 { font-family: 'Syne', sans-serif; font-size: 44px; font-weight: 800; line-height: 1.06; letter-spacing: -1.2px; color: #fff; margin-bottom: 18px; }
+        .hero-h1 em { font-style: normal; color: #1D9E75; }
+        .hero-p { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.75; margin-bottom: 30px; font-weight: 300; max-width: 400px; }
+        .hero-ctas { display: flex; gap: 10px; margin-bottom: 36px; }
+        .btn-primary { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; padding: 11px 22px; background: #1D9E75; color: #fff; border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; gap: 7px; letter-spacing: 0.01em; }
+        .btn-secondary { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 500; padding: 11px 20px; background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 9px; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+        .hero-trust { display: flex; align-items: center; gap: 14px; }
+        .trust-avatars { display: flex; }
+        .trust-av { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #080F0C; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; margin-left: -7px; }
+        .trust-av:first-child { margin-left: 0; }
+        .trust-text { font-size: 12px; color: rgba(255,255,255,0.35); }
+        .trust-text strong { color: rgba(255,255,255,0.65); font-weight: 500; }
+        .trust-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+        .trust-rating { display: flex; align-items: center; gap: 5px; font-size: 12px; color: rgba(255,255,255,0.35); }
+        .trust-stars { color: #EF9F27; font-size: 11px; letter-spacing: 1px; }
+        .hero-right { position: relative; }
+        .hero-card { background: #0D1A14; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; margin-bottom: 12px; }
+        .hc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .hc-label { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; }
+        .hc-status { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #5DCAA5; background: rgba(29,158,117,0.1); padding: 3px 9px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+        .hc-status-dot { width: 5px; height: 5px; background: #1D9E75; border-radius: 50%; }
+        .hc-input { background: #080F0C; border: 1px solid rgba(29,158,117,0.2); border-radius: 9px; padding: 11px 13px; display: flex; align-items: flex-start; gap: 9px; margin-bottom: 12px; }
+        .hc-input-text { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6; flex: 1; }
+        .hc-cursor { display: inline-block; width: 2px; height: 12px; background: #1D9E75; vertical-align: middle; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .hc-ai-preview { background: rgba(29,158,117,0.06); border: 1px solid rgba(29,158,117,0.15); border-radius: 9px; padding: 12px; }
+        .hc-ai-tag { font-size: 10px; font-weight: 600; color: #5DCAA5; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 8px; font-family: 'Syne', sans-serif; }
+        .hc-ai-text { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 10px; }
+        .hc-ai-text strong { color: #9FE1CB; font-weight: 500; }
+        .hc-ms-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+        .hc-ms { background: #080F0C; border: 1px solid rgba(255,255,255,0.06); border-radius: 7px; padding: 8px 10px; }
+        .hc-ms-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+        .hc-ms-name { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.55); }
+        .hc-ms-sol { font-family: 'DM Mono', monospace; font-size: 11px; color: #5DCAA5; font-weight: 500; }
+        .hc-ms-bar { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+        .hc-ms-fill { height: 100%; border-radius: 2px; }
+        .hero-escrow { background: #0D1A14; border: 1px solid rgba(29,158,117,0.2); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; }
+        .he-icon { width: 36px; height: 36px; background: rgba(29,158,117,0.15); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #1D9E75; font-size: 18px; flex-shrink: 0; }
+        .he-info { flex: 1; }
+        .he-label { font-size: 10px; color: rgba(255,255,255,0.35); margin-bottom: 3px; font-weight: 500; letter-spacing: 0.03em; }
+        .he-value { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: #fff; }
+        .he-addr { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+        .he-badge { font-size: 10px; font-weight: 600; color: #085041; background: #5DCAA5; padding: 4px 10px; border-radius: 6px; font-family: 'Syne', sans-serif; }
+        .section { padding: 64px 40px; }
+        .section-alt { background: #0A1510; }
+        .sec-eyebrow { font-size: 11px; font-weight: 600; color: #1D9E75; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; font-family: 'Syne', sans-serif; }
+        .sec-h { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 700; color: #fff; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+        .sec-p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.75; max-width: 400px; font-weight: 300; }
+        .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; margin-top: 40px; }
+        .step-box { background: #0A1510; padding: 24px 20px; }
+        .step-num { font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.18); margin-bottom: 16px; }
+        .step-ico { width: 38px; height: 38px; background: rgba(29,158,117,0.1); border: 1px solid rgba(29,158,117,0.18); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #1D9E75; font-size: 17px; margin-bottom: 14px; }
+        .step-t { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .step-d { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.65; }
+        .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
+        .feat-card { background: #0A1510; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; transition: border-color 0.2s, background 0.2s; }
+        .feat-card:hover { border-color: rgba(29,158,117,0.25); background: #0D1A14; }
+        .feat-ico { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 17px; }
+        .fi-teal { background: rgba(29,158,117,0.12); color: #1D9E75; }
+        .fi-blue { background: rgba(55,138,221,0.1); color: #378ADD; }
+        .fi-amber { background: rgba(239,159,39,0.1); color: #EF9F27; }
+        .feat-t { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 5px; }
+        .feat-d { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+        .reviews-section { padding: 64px 40px; }
+        .reviews-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 36px; }
+        .rating-big { display: flex; align-items: center; gap: 16px; }
+        .rating-num { font-family: 'Syne', sans-serif; font-size: 52px; font-weight: 800; color: #fff; letter-spacing: -2px; line-height: 1; }
+        .rating-stars-col { display: flex; flex-direction: column; gap: 5px; }
+        .rating-stars { color: #EF9F27; font-size: 18px; letter-spacing: 2px; }
+        .rating-count { font-size: 12px; color: rgba(255,255,255,0.35); }
+        .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .rcard { background: #0D1A14; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 20px; position: relative; }
+        .rcard-stars { color: #EF9F27; font-size: 13px; letter-spacing: 1px; margin-bottom: 12px; }
+        .rcard-quote { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 18px; }
+        .rcard-footer { display: flex; align-items: center; gap: 10px; }
+        .rcard-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+        .rcard-name { font-size: 13px; font-weight: 500; color: #fff; }
+        .rcard-role { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+        .rcard-platform { position: absolute; top: 16px; right: 16px; font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.06); }
+        .rcard-featured { border-color: rgba(29,158,117,0.3); background: #0B1810; }
+        .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .bar-label { font-size: 12px; color: rgba(255,255,255,0.35); width: 40px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+        .bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+        .bar-fill { height: 100%; background: #1D9E75; border-radius: 3px; }
+        .bar-count { font-size: 11px; color: rgba(255,255,255,0.3); width: 20px; text-align: right; font-family: 'DM Mono', monospace; }
+        .stats-band { background: #0D1A14; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); display: grid; grid-template-columns: repeat(4, 1fr); }
+        .band-stat { padding: 28px 20px; text-align: center; border-right: 1px solid rgba(255,255,255,0.06); }
+        .band-stat:last-child { border-right: none; }
+        .band-val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .band-val span { color: #1D9E75; }
+        .band-lbl { font-size: 12px; color: rgba(255,255,255,0.35); }
+        .pricing-section { padding: 64px 40px; background: #0A1510; }
+        .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 520px; margin-top: 40px; }
+        .pcard { background: #0D1A14; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 24px; }
+        .pcard-pro { border-color: rgba(29,158,117,0.35); background: #0B1810; }
+        .pcard-badge { display: inline-block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; color: #04342C; background: #5DCAA5; padding: 3px 9px; border-radius: 5px; margin-bottom: 12px; letter-spacing: 0.03em; }
+        .pcard-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .pcard-price { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
+        .pcard-price sub { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; }
+        .pcard-note { font-size: 11px; color: rgba(255,255,255,0.3); margin-bottom: 20px; }
+        .pcard-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+        .pcard-feat { font-size: 12px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 7px; }
+        .pcard-feat i { color: #1D9E75; font-size: 13px; flex-shrink: 0; }
+        .pcard-btn { width: 100%; padding: 10px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 0.02em; }
+        .pb-outline { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
+        .pb-solid { background: #1D9E75; border: none; color: #fff; }
+        .cta-block { margin: 40px; background: #1D9E75; border-radius: 16px; padding: 52px 48px; text-align: center; }
+        .cta-h { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.6px; line-height: 1.15; margin-bottom: 10px; }
+        .cta-p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 30px; font-weight: 300; }
+        .cta-btns { display: flex; justify-content: center; gap: 10px; }
+        .btn-cta-white { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; padding: 12px 26px; background: #fff; color: #085041; border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+        .btn-cta-outline { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 500; padding: 12px 22px; background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 9px; cursor: pointer; }
+        .footer { padding: 24px 40px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; }
+        .footer-logo { display: flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #fff; }
+        .footer-lm { width: 24px; height: 24px; background: #1D9E75; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #fff; }
+        .footer-links { display: flex; gap: 20px; }
+        .fl { font-size: 12px; color: rgba(255,255,255,0.3); cursor: pointer; }
+        .fl:hover { color: rgba(255,255,255,0.6); }
+        .sol-badge { display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 5px 10px; border-radius: 6px; }
+        .sol-dot { width: 6px; height: 6px; background: #9945FF; border-radius: 50%; }
+        @media (max-width: 768px) {
+          .hero { grid-template-columns: 1fr; padding: 40px 20px; }
+          .nav { padding: 16px 20px; }
+          .nav-links { display: none; }
+          .section { padding: 40px 20px; }
+          .steps-grid { grid-template-columns: 1fr; }
+          .feat-grid { grid-template-columns: 1fr; }
+          .reviews-grid { grid-template-columns: 1fr; }
+          .stats-band { grid-template-columns: 1fr; }
+          .band-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+          .pricing-grid { grid-template-columns: 1fr; }
+          .footer { flex-direction: column; gap: 16px; padding: 24px 20px; }
+          .footer-links { flex-wrap: wrap; justify-content: center; }
+        }
+      `}</style>
+      <h2 className="sr-only">TrustChain homepage — AI contracts, Solana escrow, and verified freelancer reviews</h2>
+      <div className="tc">
+        <nav className="nav">
+          <div className="nav-logo">
+            <div className="nav-logo-mark"><i className="ti ti-shield-check" aria-hidden="true"></i></div>
+            TrustChain
+          </div>
+          <div className="nav-links">
+            <span className="nav-link">How it works</span>
+            <span className="nav-link">Features</span>
+            <span className="nav-link">Reviews</span>
+            <span className="nav-link">Pricing</span>
+            <span className="nav-link">Docs</span>
+          </div>
+          <div className="nav-actions">
+            <button className="btn-ghost"><i className="ti ti-wallet" style={{fontSize: '13px', verticalAlign: '-1px', marginRight: '4px'}} aria-hidden="true"></i> Connect Wallet</button>
+            <button className="btn-teal">Get started</button>
+          </div>
+        </nav>
 
-      <div className="relative">
-        <Container>
-          <Navbar
-            walletLabel={shortWallet ? `Connected: ${shortWallet}` : undefined}
-            onConnectWallet={onConnectWallet}
-          />
+        <section className="hero">
+          <div className="hero-left">
+            <div className="hero-eyebrow"><div className="hero-dot"></div> Now live on Solana mainnet</div>
+            <h1 className="hero-h1">Freelance work,<br/><em>secured by AI</em><br/>and blockchain.</h1>
+            <p className="hero-p">Describe your project in plain language. AI generates the contract, Solana locks the funds, and payment releases the moment milestones are approved.</p>
+            <div className="hero-ctas">
+              <button className="btn-primary"><i className="ti ti-briefcase" style={{fontSize: '14px'}} aria-hidden="true"></i> Post a project</button>
+              <button className="btn-secondary"><i className="ti ti-search" style={{fontSize: '14px'}} aria-hidden="true"></i> Find work</button>
+            </div>
+            <div className="hero-trust">
+              <div className="trust-avatars">
+                <div className="trust-av" style={{background: '#1D4034', color: '#5DCAA5'}}>AR</div>
+                <div className="trust-av" style={{background: '#0C2A47', color: '#378ADD'}}>MK</div>
+                <div className="trust-av" style={{background: '#3D1A0C', color: '#D85A30'}}>JL</div>
+                <div className="trust-av" style={{background: '#2A1940', color: '#7F77DD'}}>SP</div>
+                <div className="trust-av" style={{background: '#1D4034', color: '#5DCAA5'}}>+</div>
+              </div>
+              <span className="trust-text"><strong>2,400+</strong> freelancers &amp; clients</span>
+              <div className="trust-divider"></div>
+              <div className="trust-rating">
+                <span className="trust-stars">★★★★★</span>
+                <span><strong style={{color: 'rgba(255,255,255,0.65)'}}>4.9</strong> / 5</span>
+              </div>
+            </div>
+          </div>
 
-          <motion.main
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: { opacity: 0, y: 10 },
-              show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-            }}
-            className="pt-10 md:pt-16"
-          >
-            <section className="grid items-start gap-10 pb-8 md:grid-cols-[1.05fr_0.95fr] md:gap-12 md:pb-12">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-zinc-200">
-                  <span
-                    className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: BRAND_TEAL }}
-                  />
-                  <span className="text-zinc-200/90">
-                    Now live on Solana mainnet
-                  </span>
-                </div>
-
-                <h1 className="mt-6 text-[40px] leading-[1.04] tracking-tight text-white md:text-[52px] font-[800] font-[var(--font-syne)]">
-                  Freelance work, secured by{" "}
-                  <span style={{ color: BRAND_TEAL }}>AI</span> and blockchain.
-                </h1>
-
-                <p className="mt-6 max-w-xl text-[15px] leading-7 text-zinc-300/80">
-                  TrustChain turns plain-language project briefs into milestone
-                  contracts. AI drafts the agreement, escrow is funded on Solana,
-                  and payments auto-release as work is approved.
-                </p>
-
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <a
-                    href="#pricing"
-                    className="inline-flex h-11 items-center justify-center rounded-full px-5 text-xs font-semibold text-black shadow-[0_18px_40px_rgba(29,158,117,0.30)]"
-                    style={{ backgroundColor: BRAND_TEAL }}
-                  >
-                    Post a project
-                  </a>
-                  <a
-                    href="#features"
-                    className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-white/5 px-5 text-xs font-semibold text-zinc-100 hover:bg-white/10"
-                  >
-                    Find work
-                  </a>
-                </div>
-
-                <div className="mt-8 flex flex-wrap items-center gap-4 text-xs text-zinc-300/70">
-                  <div className="flex items-center">
-                    <div className="flex -space-x-2">
-                      <AvatarBubble label="AK" tint="rgba(29,158,117,0.25)" />
-                      <AvatarBubble label="MS" tint="rgba(59,130,246,0.22)" />
-                      <AvatarBubble label="SP" tint="rgba(217,70,239,0.22)" />
-                      <AvatarBubble label="JT" tint="rgba(245,158,11,0.22)" />
-                    </div>
-                    <span className="ml-3">2,400+ freelancers &amp; clients</span>
+          <div className="hero-right">
+            <div className="hero-card">
+              <div className="hc-header">
+                <span className="hc-label">AI contract generator</span>
+                <span className="hc-status"><span className="hc-status-dot"></span> Generating...</span>
+              </div>
+              <div className="hc-input">
+                <i className="ti ti-sparkles" style={{color: '#1D9E75', fontSize: '15px', flexShrink: 0, marginTop: '1px'}} aria-hidden="true"></i>
+                <span className="hc-input-text">Design a mobile app UI for a fintech startup, 3 screens, 2 revision rounds, deliver in 3 weeks for 4.5 SOL<span className="hc-cursor"></span></span>
+              </div>
+              <div className="hc-ai-preview">
+                <div className="hc-ai-tag"><i className="ti ti-robot" style={{fontSize: '11px', marginRight: '3px'}} aria-hidden="true"></i> AI draft preview</div>
+                <div className="hc-ai-text">Agreement between <strong>Client</strong> and <strong>Freelancer</strong> for <strong>mobile UI design</strong> across 3 milestones. <strong>4.5 SOL</strong> held in Solana escrow, releasing per milestone approval.</div>
+                <div className="hc-ms-row">
+                  <div className="hc-ms">
+                    <div className="hc-ms-top"><span className="hc-ms-name">Wireframes</span><span className="hc-ms-sol">1.0 SOL</span></div>
+                    <div className="hc-ms-bar"><div className="hc-ms-fill" style={{width: '100%', background: '#1D9E75'}}></div></div>
                   </div>
-                  <div className="hidden h-4 w-px bg-white/10 sm:block" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-zinc-200">★★★★★</span>
-                    <span>4.8 / 5</span>
+                  <div className="hc-ms">
+                    <div className="hc-ms-top"><span className="hc-ms-name">UI designs</span><span className="hc-ms-sol">2.5 SOL</span></div>
+                    <div className="hc-ms-bar"><div className="hc-ms-fill" style={{width: '55%', background: '#378ADD'}}></div></div>
                   </div>
-                  {phantomDetected ? (
-                    <span className="hidden sm:inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ backgroundColor: BRAND_TEAL }}
-                      />
-                      Phantom detected
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="relative">
-                <ChromeMock />
-              </div>
-            </section>
-          </motion.main>
-        </Container>
-
-        {/* Stats bar: 4 columns with borders */}
-        <section className="border-y border-white/10 bg-white/[0.02]">
-          <Container>
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              <StatCell k="$1.2M+" v="escrow secured" />
-              <StatCell k="2,400+" v="contracts" />
-              <StatCell k="98.4%" v="on-time" />
-              <StatCell k="1.4 days" v="avg release" />
-            </div>
-          </Container>
-        </section>
-
-        {/* Below stats: full-width chrome mockup (spec) */}
-        <section className="py-12 md:py-16">
-          <Container>
-            <Reveal>
-              <div className="mx-auto max-w-5xl">
-                <ChromeMock variant="wide" />
-              </div>
-            </Reveal>
-          </Container>
-        </section>
-
-        {/* How it works */}
-        <section id="how" className="py-12 md:py-16">
-          <Container>
-            <SectionHeading
-              eyebrow="How it works"
-              title="Four steps. Zero ambiguity."
-              subtitle="From brief to escrowed milestones, automated end-to-end."
-            />
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <HowStep
-                n="01"
-                icon={<IconWriting />}
-                title="Describe"
-                desc="Write your scope, timeline, and payment terms in plain language."
-              />
-              <HowStep
-                n="02"
-                icon={<IconChecklist />}
-                title="AI drafts"
-                desc="TrustChain generates a milestone contract you can edit and approve."
-              />
-              <HowStep
-                n="03"
-                icon={<IconWallet />}
-                title="Fund escrow"
-                desc="Deposit SOL into a program vault for each milestone."
-              />
-              <HowStep
-                n="04"
-                icon={<IconShield />}
-                title="Auto-release"
-                desc="Payments release as milestones are accepted—no chasing invoices."
-              />
-            </div>
-          </Container>
-        </section>
-
-        {/* Features */}
-        <section id="features" className="py-12 md:py-16">
-          <Container>
-            <SectionHeading
-              eyebrow="Features"
-              title="Built for trust at internet speed."
-              subtitle="AI for clarity. Solana for settlement. A dark UI that keeps focus on the work."
-            />
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <FeatureCard
-                icon={<IconWriting />}
-                title="Plain-language contracts"
-                desc="Turn a short brief into clear deliverables, milestones, and acceptance criteria."
-              />
-              <FeatureCard
-                icon={<IconLock />}
-                title="Escrow by default"
-                desc="Funds are locked before work starts—reducing risk for both sides."
-              />
-              <FeatureCard
-                icon={<IconChecklist />}
-                title="Milestone approvals"
-                desc="Approve milestone-by-milestone with an auditable status trail."
-              />
-              <FeatureCard
-                icon={<IconSend />}
-                title="Instant settlement"
-                desc="Release payments in seconds on Solana when work is accepted."
-              />
-              <FeatureCard
-                icon={<IconShield />}
-                title="Dispute-resilient"
-                desc="Structured scopes and milestones minimize disagreement from day one."
-              />
-              <FeatureCard
-                icon={<IconWallet />}
-                title="Wallet-native"
-                desc="Connect Phantom (stubbed) to preview a web3-first flow."
-              />
-            </div>
-          </Container>
-        </section>
-
-        {/* Social proof */}
-        <section id="proof" className="py-12 md:py-16">
-          <Container>
-            <SectionHeading
-              eyebrow="Social proof"
-              title="Teams shipping with confidence."
-              subtitle="Freelancers get paid on time. Clients get predictable delivery."
-            />
-
-            <Reveal>
-              <div
-                className="mt-8 rounded-2xl border border-white/10 p-6 md:p-8"
-                style={{ backgroundColor: "rgba(255,255,255,0.03)" }}
-              >
-                <div className="grid gap-6 md:grid-cols-3">
-                  <Testimonial
-                    name="Amina K."
-                    role="Product designer"
-                    quote="The milestone structure stopped scope creep instantly. Escrow made it stress-free."
-                    initials="AK"
-                    tint="rgba(29,158,117,0.25)"
-                  />
-                  <Testimonial
-                    name="Marco S."
-                    role="Founder"
-                    quote="AI drafting saved us hours. We posted, funded, and started work the same day."
-                    initials="MS"
-                    tint="rgba(59,130,246,0.22)"
-                  />
-                  <Testimonial
-                    name="Sofia P."
-                    role="Full-stack dev"
-                    quote="Auto-release on approval is huge. No more awkward payment follow-ups."
-                    initials="SP"
-                    tint="rgba(217,70,239,0.22)"
-                  />
-                </div>
-
-                <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 md:grid-cols-4">
-                  <MiniStat k="4.8/5" v="average rating" />
-                  <MiniStat k="24h" v="median contract draft" />
-                  <MiniStat k="0" v="late escrow funding" />
-                  <MiniStat k="99%" v="milestones approved" />
-                </div>
-              </div>
-            </Reveal>
-          </Container>
-        </section>
-
-        {/* Pricing */}
-        <section id="pricing" className="py-12 md:py-16">
-          <Container>
-            <SectionHeading
-              eyebrow="Pricing"
-              title="Start free. Upgrade when you grow."
-              subtitle="Note: 1.5% escrow fee applies to all plans."
-            />
-
-            <div className="mt-8 grid gap-4 lg:grid-cols-2">
-              <PricingCard
-                name="Free"
-                price="$0"
-                cadence=""
-                highlight={false}
-                features={[
-                  "AI contract draft (basic)",
-                  "Milestone templates",
-                  "Escrow tracking UI",
-                  "Community support",
-                ]}
-              />
-              <PricingCard
-                name="Pro"
-                price="$9"
-                cadence="/mo"
-                highlight
-                badge="Most popular"
-                features={[
-                  "AI contract draft (advanced)",
-                  "Custom milestone logic",
-                  "Priority dispute support",
-                  "Team workspaces",
-                ]}
-              />
-            </div>
-
-            <div className="mt-6 text-center text-xs text-zinc-300/70">
-              1.5% escrow fee on all plans.
-            </div>
-          </Container>
-        </section>
-
-        {/* Teal CTA */}
-        <section className="py-12 md:py-16">
-          <div
-            className="w-full"
-            style={{ backgroundColor: BRAND_TEAL }}
-          >
-            <Container>
-              <div className="py-12 md:py-14">
-                <div className="grid items-center gap-8 md:grid-cols-[1.15fr_0.85fr]">
-                  <div>
-                    <h2 className="text-[28px] leading-[1.1] text-white md:text-[34px] font-[800] font-[var(--font-syne)]">
-                      Ready to work without worry?
-                    </h2>
-                    <p className="mt-3 max-w-xl text-sm text-white/85">
-                      Draft a milestone contract, fund escrow, and ship with a
-                      clear acceptance path.
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-3 md:justify-end">
-                    <a
-                      href="#"
-                      className="inline-flex h-11 items-center justify-center rounded-full bg-white px-5 text-xs font-semibold text-black hover:bg-white/90"
-                    >
-                      Get started
-                    </a>
-                    <button
-                      type="button"
-                      onClick={onConnectWallet}
-                      className="inline-flex h-11 items-center justify-center rounded-full border border-white/70 bg-transparent px-5 text-xs font-semibold text-white hover:bg-white/10"
-                    >
-                      {walletAddress ? "Disconnect" : "Connect Wallet"}
-                    </button>
+                  <div className="hc-ms">
+                    <div className="hc-ms-top"><span className="hc-ms-name">Delivery</span><span className="hc-ms-sol">1.0 SOL</span></div>
+                    <div className="hc-ms-bar"><div className="hc-ms-fill" style={{width: '0%', background: '#888780'}}></div></div>
                   </div>
                 </div>
               </div>
-            </Container>
+            </div>
+            <div className="hero-escrow">
+              <div className="he-icon"><i className="ti ti-lock" aria-hidden="true"></i></div>
+              <div className="he-info">
+                <div className="he-label">Solana escrow vault</div>
+                <div className="he-value">4.5 SOL locked</div>
+                <div className="he-addr">5XjR3mPq...k2Wq · Devnet confirmed</div>
+              </div>
+              <div className="he-badge">Secured</div>
+            </div>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="border-t border-white/10 py-10">
-          <Container>
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div className="flex items-center gap-2">
-                <LogoMark />
-                <span className="text-sm font-semibold tracking-wide text-white font-[var(--font-syne)]">
-                  TrustChain
-                </span>
-              </div>
+        <div className="stats-band">
+          <div className="band-stat"><div className="band-val">$<span>1.2M</span>+</div><div className="band-lbl">secured in escrow</div></div>
+          <div className="band-stat"><div className="band-val"><span>2,400</span>+</div><div className="band-lbl">contracts completed</div></div>
+          <div className="band-stat"><div className="band-val"><span>98.4</span>%</div><div className="band-lbl">on-time payment rate</div></div>
+          <div className="band-stat"><div className="band-val"><span>1.4</span>d</div><div className="band-lbl">avg. payment release</div></div>
+        </div>
 
-              <div className="flex flex-wrap items-center gap-6 text-xs text-zinc-300/70 md:justify-center">
-                <a className="hover:text-zinc-100" href="#how">
-                  How it works
-                </a>
-                <a className="hover:text-zinc-100" href="#features">
-                  Features
-                </a>
-                <a className="hover:text-zinc-100" href="#pricing">
-                  Pricing
-                </a>
-                <a className="hover:text-zinc-100" href="#">
-                  Docs
-                </a>
-              </div>
+        <section className="section section-alt">
+          <div className="sec-eyebrow">How it works</div>
+          <h2 className="sec-h">Four steps from agreement<br/>to payment.</h2>
+          <div className="steps-grid">
+            <div className="step-box">
+              <div className="step-num">01</div>
+              <div className="step-ico"><i className="ti ti-writing" aria-hidden="true"></i></div>
+              <div className="step-t">Describe the work</div>
+              <div className="step-d">Write what you need in plain language — scope, timeline, deliverables. No legal templates.</div>
+            </div>
+            <div className="step-box">
+              <div className="step-num">02</div>
+              <div className="step-ico"><i className="ti ti-sparkles" aria-hidden="true"></i></div>
+              <div className="step-t">AI drafts the contract</div>
+              <div className="step-d">AI generates a structured contract with milestones, payment terms, and revision rights.</div>
+            </div>
+            <div className="step-box">
+              <div className="step-num">03</div>
+              <div className="step-ico"><i className="ti ti-lock" aria-hidden="true"></i></div>
+              <div className="step-t">Fund the escrow</div>
+              <div className="step-d">Client deposits SOL into a Solana smart contract vault. Funds locked until milestones are approved.</div>
+            </div>
+            <div className="step-box">
+              <div className="step-num">04</div>
+              <div className="step-ico"><i className="ti ti-circle-check" aria-hidden="true"></i></div>
+              <div className="step-t">Work done, funds release</div>
+              <div className="step-d">AI reviews deliverables against contract. Payment auto-releases on-chain. No invoicing needed.</div>
+            </div>
+          </div>
+        </section>
 
-              <div className="md:justify-end">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-zinc-100/90">
-                  <span className="h-2 w-2 rounded-full bg-purple-400" />
-                  Built on Solana
-                </span>
+        <section className="section">
+          <div className="sec-eyebrow">Features</div>
+          <h2 className="sec-h">Built for the future<br/>of freelance work.</h2>
+          <div className="feat-grid">
+            <div className="feat-card">
+              <div className="feat-ico fi-teal"><i className="ti ti-writing" aria-hidden="true"></i></div>
+              <div className="feat-t">AI contract generation</div>
+              <div className="feat-d">Describe your project in plain English. Get a structured contract with milestones and payment terms in seconds.</div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-ico fi-teal"><i className="ti ti-lock" aria-hidden="true"></i></div>
+              <div className="feat-t">Solana escrow vault</div>
+              <div className="feat-d">Non-custodial smart contract holds funds. Neither party can withdraw without meeting contract conditions.</div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-ico fi-teal"><i className="ti ti-checklist" aria-hidden="true"></i></div>
+              <div className="feat-t">Milestone tracking</div>
+              <div className="feat-d">AI monitors deliverable submissions against contract criteria and flags issues before releasing any payment.</div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-ico fi-blue"><i className="ti ti-send" aria-hidden="true"></i></div>
+              <div className="feat-t">Auto payment release</div>
+              <div className="feat-d">Payments release on-chain the moment a milestone is approved — no invoicing, no manual transfers.</div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-ico fi-blue"><i className="ti ti-shield" aria-hidden="true"></i></div>
+              <div className="feat-t">Dispute resolution</div>
+              <div className="feat-d">AI-assisted resolution uses the original contract as ground truth — fast, fair, and transparent.</div>
+            </div>
+            <div className="feat-card">
+              <div className="feat-ico fi-amber"><i className="ti ti-star" aria-hidden="true"></i></div>
+              <div className="feat-t">Verified reviews</div>
+              <div className="feat-d">Only wallets that completed a contract can leave reviews. Every rating is cryptographically verified on-chain.</div>
+            </div>
+          </div>
+        </section>
+
+        <section className="reviews-section">
+          <div style={{display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap', gap: '24px'}}>
+            <div>
+              <div className="sec-eyebrow">Reviews</div>
+              <h2 className="sec-h">Loved by 2,400+<br/>freelancers and clients.</h2>
+              <p className="sec-p" style={{marginTop: '8px'}}>Every review is wallet-verified. Only users who completed a contract can leave a rating.</p>
+            </div>
+            <div style={{display: 'flex', gap: '24px', alignItems: 'flex-start'}}>
+              <div>
+                <div style={{fontFamily: "'Syne', sans-serif", fontSize: '56px', fontWeight: 800, color: '#fff', letterSpacing: '-2px', lineHeight: 1}}>4.9</div>
+                <div style={{color: '#EF9F27', fontSize: '20px', letterSpacing: '2px', margin: '6px 0 4px'}}>★★★★★</div>
+                <div style={{fontSize: '12px', color: 'rgba(255,255,255,0.3)'}}>from 847 reviews</div>
+              </div>
+              <div style={{minWidth: '140px', paddingTop: '6px'}}>
+                <div className="bar-row"><span className="bar-label">5★</span><div className="bar-track"><div className="bar-fill" style={{width: '88%'}}></div></div><span className="bar-count">744</span></div>
+                <div className="bar-row"><span className="bar-label">4★</span><div className="bar-track"><div className="bar-fill" style={{width: '9%', background: '#9FE1CB'}}></div></div><span className="bar-count">76</span></div>
+                <div className="bar-row"><span className="bar-label">3★</span><div className="bar-track"><div className="bar-fill" style={{width: '2%', background: '#5DCAA5'}}></div></div><span className="bar-count">17</span></div>
+                <div className="bar-row"><span className="bar-label">2★</span><div className="bar-track"><div className="bar-fill" style={{width: '1%', background: '#444441'}}></div></div><span className="bar-count">7</span></div>
+                <div className="bar-row"><span className="bar-label">1★</span><div className="bar-track"><div className="bar-fill" style={{width: '0%'}}></div></div><span className="bar-count">3</span></div>
               </div>
             </div>
-          </Container>
+          </div>
+
+          <div className="reviews-grid">
+            <div className="rcard rcard-featured">
+              <div className="rcard-platform">verified on-chain</div>
+              <div className="rcard-stars">★★★★★</div>
+              <p className="rcard-quote">"First time finishing a project without a single payment argument. The escrow just works — and the AI contract caught scope creep I would've missed completely."</p>
+              <div className="rcard-footer">
+                <div className="rcard-av" style={{background: '#1D4034', color: '#5DCAA5'}}>AR</div>
+                <div><div className="rcard-name">Aisha R.</div><div className="rcard-role">UI Designer · Lagos, NG · 12 contracts</div></div>
+              </div>
+            </div>
+            <div className="rcard">
+              <div className="rcard-platform">verified on-chain</div>
+              <div className="rcard-stars">★★★★★</div>
+              <p className="rcard-quote">"Hired 3 contractors last month through TrustChain. Set up each contract in 2 minutes, funds released automatically. It's genuinely the future of hiring remote talent."</p>
+              <div className="rcard-footer">
+                <div className="rcard-av" style={{background: '#0C2A47', color: '#378ADD'}}>MK</div>
+                <div><div className="rcard-name">Marcus K.</div><div className="rcard-role">Startup founder · Berlin, DE · 8 contracts</div></div>
+              </div>
+            </div>
+            <div className="rcard">
+              <div className="rcard-platform">verified on-chain</div>
+              <div className="rcard-stars">★★★★★</div>
+              <p className="rcard-quote">"As a dev I was skeptical, but the AI contract generation is genuinely impressive. It captured technical deliverables I wouldn't have known to explicitly include."</p>
+              <div className="rcard-footer">
+                <div className="rcard-av" style={{background: '#3D1A0C', color: '#D85A30'}}>JL</div>
+                <div><div className="rcard-name">Jade L.</div><div className="rcard-role">Full-stack dev · New York, US · 5 contracts</div></div>
+              </div>
+            </div>
+            <div className="rcard">
+              <div className="rcard-platform">verified on-chain</div>
+              <div className="rcard-stars">★★★★★</div>
+              <p className="rcard-quote">"The milestone tracking is what sold me. My client could see exactly what was approved and what wasn't — no ambiguity, no back-and-forth."</p>
+              <div className="rcard-footer">
+                <div className="rcard-av" style={{background: '#2A1940', color: '#7F77DD'}}>SP</div>
+                <div><div className="rcard-name">Siddharth P.</div><div className="rcard-role">Backend engineer · Mumbai, IN · 9 contracts</div></div>
+              </div>
+            </div>
+            <div className="rcard">
+              <div className="rcard-platform">verified on-chain</div>
+              <div className="rcard-stars">★★★★★</div>
+              <p className="rcard-quote">"Love that reviews are on-chain. When I hire someone and see 4.9 stars with 20 verified contracts, I actually trust it. No fake reviews possible."</p>
+              <div className="rcard-footer">
+                <div className="rcard-av" style={{background: '#1D3420', color: '#97C459'}}>TW</div>
+                <div><div className="rcard-name">Tara W.</div><div className="rcard-role">Product manager · Toronto, CA · 6 contracts</div></div>
+              </div>
+            </div>
+            <div className="rcard">
+              <div className="rcard-platform">verified on-chain</div>
+              <div className="rcard-stars">★★★★☆</div>
+              <p className="rcard-quote">"Took me 10 mins to figure out the wallet setup, but once connected it was smooth. Dispute resolution saved me when a client went silent — got my SOL back in 48 hours."</p>
+              <div className="rcard-footer">
+                <div className="rcard-av" style={{background: '#2A1A10', color: '#EF9F27'}}>OR</div>
+                <div><div className="rcard-name">Omar R.</div><div className="rcard-role">Motion designer · Dubai, AE · 3 contracts</div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="pricing-section">
+          <div className="sec-eyebrow">Pricing</div>
+          <h2 className="sec-h">Simple, transparent pricing.</h2>
+          <p className="sec-p" style={{marginTop: '8px'}}>We only earn when work gets done — 1.5% escrow fee on every successful payment release.</p>
+          <div className="pricing-grid">
+            <div className="pcard">
+              <div className="pcard-name">Free</div>
+              <div className="pcard-price">$0 <sub>/ month</sub></div>
+              <div className="pcard-note">+ 1.5% escrow fee per release</div>
+              <ul className="pcard-feats">
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> 1 active contract</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> AI contract drafting</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Solana escrow vault</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Verified reviews</li>
+              </ul>
+              <button className="pcard-btn pb-outline">Start for free</button>
+            </div>
+            <div className="pcard pcard-pro">
+              <div className="pcard-badge">Most popular</div>
+              <div className="pcard-name">Pro</div>
+              <div className="pcard-price">$9 <sub>/ month</sub></div>
+              <div className="pcard-note">+ 1.5% escrow fee per release</div>
+              <ul className="pcard-feats">
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Unlimited contracts</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Advanced AI tracking</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Priority disputes</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Analytics dashboard</li>
+                <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Contract templates</li>
+              </ul>
+              <button className="pcard-btn pb-solid">Get Pro</button>
+            </div>
+          </div>
+        </section>
+
+        <div className="cta-block">
+          <h2 className="cta-h">Ready to work<br/>without worry?</h2>
+          <p className="cta-p">Join 2,400+ freelancers and clients who've left payment disputes behind for good.</p>
+          <div className="cta-btns">
+            <button className="btn-cta-white"><i className="ti ti-rocket" style={{fontSize: '14px', verticalAlign: '-2px', marginRight: '5px'}} aria-hidden="true"></i> Start for free</button>
+            <button className="btn-cta-outline">Read the docs</button>
+          </div>
+        </div>
+
+        <footer className="footer">
+          <div className="footer-logo">
+            <div className="footer-lm"><i className="ti ti-shield-check" style={{fontSize: '12px'}} aria-hidden="true"></i></div>
+            TrustChain
+          </div>
+          <div className="footer-links">
+            <span className="fl">About</span>
+            <span className="fl">Docs</span>
+            <span className="fl">Twitter</span>
+            <span className="fl">GitHub</span>
+            <span className="fl">Privacy</span>
+          </div>
+          <div className="sol-badge"><div className="sol-dot"></div> Built on Solana</div>
         </footer>
       </div>
-    </div>
-  );
-}
-
-function Container({ children }: { children: React.ReactNode }) {
-  return <div className="mx-auto w-full max-w-6xl px-6">{children}</div>;
-}
-
-function Reveal({ children }: { children: React.ReactNode }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function Navbar({
-  walletLabel,
-  onConnectWallet,
-}: {
-  walletLabel?: string;
-  onConnectWallet: () => void;
-}) {
-  return (
-    <header className="flex items-center justify-between pt-6">
-      <div className="flex items-center gap-2">
-        <LogoMark />
-        <span className="text-sm font-semibold tracking-wide text-white font-[var(--font-syne)]">
-          TrustChain
-        </span>
-      </div>
-
-      <nav className="hidden items-center gap-7 text-xs text-zinc-300/70 md:flex">
-        <a className="hover:text-zinc-100" href="#how">
-          How it works
-        </a>
-        <a className="hover:text-zinc-100" href="#features">
-          Features
-        </a>
-        <a className="hover:text-zinc-100" href="#pricing">
-          Pricing
-        </a>
-        <a className="hover:text-zinc-100" href="#">
-          Docs
-        </a>
-      </nav>
-
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onConnectWallet}
-          className="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-zinc-100 hover:bg-white/10 sm:inline-flex"
-        >
-          {walletLabel ?? "Connect Wallet"}
-        </button>
-        <a
-          href="#pricing"
-          className="inline-flex rounded-full px-4 py-2 text-xs font-semibold text-black shadow-[0_12px_30px_rgba(29,158,117,0.28)]"
-          style={{ backgroundColor: BRAND_TEAL }}
-        >
-          Get started
-        </a>
-      </div>
-    </header>
-  );
-}
-
-function LogoMark() {
-  return (
-    <span
-      className="inline-flex h-8 w-8 items-center justify-center rounded-md ring-1 ring-white/10"
-      style={{ backgroundColor: "rgba(29,158,117,0.18)" }}
-      aria-hidden
-    >
-      <IconShield />
-    </span>
-  );
-}
-
-function SectionHeading({
-  eyebrow,
-  title,
-  subtitle,
-}: {
-  eyebrow: string;
-  title: string;
-  subtitle: string;
-}) {
-  return (
-    <Reveal>
-      <div className="max-w-2xl">
-        <div className="text-xs font-semibold tracking-[0.18em] text-zinc-300/70 uppercase">
-          {eyebrow}
-        </div>
-        <h2 className="mt-3 text-[26px] leading-[1.12] text-white md:text-[32px] font-[800] font-[var(--font-syne)]">
-          {title}
-        </h2>
-        <p className="mt-3 text-sm leading-7 text-zinc-300/75">{subtitle}</p>
-      </div>
-    </Reveal>
-  );
-}
-
-function StatCell({ k, v }: { k: string; v: string }) {
-  return (
-    <div className="border-white/10 p-5 md:p-6 border-r last:border-r-0 border-b md:border-b-0">
-      <div className="text-lg text-white font-[var(--font-dm-mono)]">{k}</div>
-      <div className="mt-1 text-xs text-zinc-300/70">{v}</div>
-    </div>
-  );
-}
-
-function AvatarBubble({ label, tint }: { label: string; tint: string }) {
-  return (
-    <span
-      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#0B1A14] text-[10px] font-semibold text-white/80"
-      style={{ backgroundColor: tint }}
-    >
-      {label}
-    </span>
-  );
-}
-
-function HowStep({
-  n,
-  icon,
-  title,
-  desc,
-}: {
-  n: string;
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <Reveal>
-      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-        <div className="flex items-center justify-between">
-          <div className="text-xs text-zinc-300/55 font-[var(--font-dm-mono)]">
-            {n}
-          </div>
-          <span
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl"
-            style={{ backgroundColor: BRAND_TEAL }}
-          >
-            <span className="text-black">{icon}</span>
-          </span>
-        </div>
-        <div className="mt-4 text-sm font-semibold text-white font-[var(--font-syne)]">
-          {title}
-        </div>
-        <div className="mt-2 text-sm leading-6 text-zinc-300/75">{desc}</div>
-      </div>
-    </Reveal>
-  );
-}
-
-function FeatureCard({
-  icon,
-  title,
-  desc,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <Reveal>
-      <div
-        className="group rounded-2xl border border-white/10 p-5 transition"
-        style={{ backgroundColor: CARD_BG }}
-      >
-        <div className="flex items-center justify-between">
-          <span
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl"
-            style={{ backgroundColor: "rgba(29,158,117,0.18)" }}
-          >
-            <span style={{ color: BRAND_TEAL }}>{icon}</span>
-          </span>
-          <span className="h-2 w-2 rounded-full bg-white/10 group-hover:bg-white/20" />
-        </div>
-        <div className="mt-4 text-sm font-semibold text-white font-[var(--font-syne)]">
-          {title}
-        </div>
-        <div className="mt-2 text-sm leading-6 text-zinc-300/75">{desc}</div>
-        <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition group-hover:opacity-100 [box-shadow:0_0_0_1px_rgba(29,158,117,0.45),0_0_40px_rgba(29,158,117,0.12)]" />
-      </div>
-    </Reveal>
-  );
-}
-
-function Testimonial({
-  name,
-  role,
-  quote,
-  initials,
-  tint,
-}: {
-  name: string;
-  role: string;
-  quote: string;
-  initials: string;
-  tint: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-      <div className="flex items-center gap-3">
-        <span
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-xs font-semibold text-white/85"
-          style={{ backgroundColor: tint }}
-        >
-          {initials}
-        </span>
-        <div>
-          <div className="text-sm font-semibold text-white">{name}</div>
-          <div className="text-xs text-zinc-300/70">{role}</div>
-        </div>
-      </div>
-      <p className="mt-4 text-sm leading-6 text-zinc-200/75">“{quote}”</p>
-    </div>
-  );
-}
-
-function MiniStat({ k, v }: { k: string; v: string }) {
-  return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-      <div className="text-base text-white font-[var(--font-dm-mono)]">{k}</div>
-      <div className="mt-1 text-xs text-zinc-300/70">{v}</div>
-    </div>
-  );
-}
-
-function PricingCard({
-  name,
-  price,
-  cadence,
-  features,
-  highlight,
-  badge,
-}: {
-  name: string;
-  price: string;
-  cadence: string;
-  features: string[];
-  highlight: boolean;
-  badge?: string;
-}) {
-  return (
-    <Reveal>
-      <div
-        className="relative rounded-2xl border p-6 md:p-7"
-        style={{
-          backgroundColor: CARD_BG,
-          borderColor: highlight ? "rgba(29,158,117,0.7)" : "rgba(255,255,255,0.10)",
-          boxShadow: highlight ? "0 0 0 1px rgba(29,158,117,0.2), 0 30px 90px rgba(0,0,0,0.35)" : undefined,
-        }}
-      >
-        {badge ? (
-          <span
-            className="absolute -top-3 left-6 inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold text-black"
-            style={{ backgroundColor: BRAND_TEAL }}
-          >
-            {badge}
-          </span>
-        ) : null}
-
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="text-sm font-semibold text-white font-[var(--font-syne)]">
-              {name}
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl text-white font-[800] font-[var(--font-syne)]">
-                {price}
-              </span>
-              {cadence ? (
-                <span className="text-sm text-zinc-300/70">{cadence}</span>
-              ) : null}
-            </div>
-          </div>
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-zinc-200/80">
-            1.5% fee
-          </span>
-        </div>
-
-        <div className="mt-6 grid gap-3">
-          {features.map((f) => (
-            <div key={f} className="flex items-start gap-3 text-sm text-zinc-200/75">
-              <span
-                className="mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full"
-                style={{ backgroundColor: "rgba(29,158,117,0.18)" }}
-                aria-hidden
-              >
-                <span style={{ color: BRAND_TEAL }}>
-                  <IconCheck />
-                </span>
-              </span>
-              <span>{f}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 flex gap-3">
-          <a
-            href="#"
-            className="inline-flex h-11 flex-1 items-center justify-center rounded-full text-xs font-semibold text-black"
-            style={{ backgroundColor: highlight ? BRAND_TEAL : "rgba(255,255,255,0.10)" }}
-          >
-            Choose {name}
-          </a>
-          {highlight ? (
-            <a
-              href="#"
-              className="inline-flex h-11 items-center justify-center rounded-full border border-white/10 bg-transparent px-5 text-xs font-semibold text-zinc-100 hover:bg-white/5"
-            >
-              View docs
-            </a>
-          ) : null}
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
-function ChromeMock({ variant }: { variant?: "wide" }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] shadow-[0_30px_90px_rgba(0,0,0,0.55)] backdrop-blur">
-      <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-300/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
-        </div>
-        <div className="hidden md:block rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[11px] text-zinc-300/80">
-          trustchain.app/contracts/new
-        </div>
-        <div className="h-6 w-6 rounded-md bg-white/5" />
-      </div>
-
-      <div className="p-4 md:p-5">
-        <div className={variant === "wide" ? "grid gap-4 lg:grid-cols-[1.1fr_0.9fr]" : "grid gap-4"}>
-          <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <div className="flex items-center justify-between">
-              <div className="text-[11px] font-semibold tracking-wide text-zinc-200/80">
-                AI CONTRACT GENERATOR
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-zinc-100/80">
-                <span
-                  className="h-1.5 w-1.5 animate-pulse rounded-full"
-                  style={{ backgroundColor: BRAND_TEAL }}
-                />
-                Generating…
-              </div>
-            </div>
-
-            <div className="mt-3 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-zinc-200/80">
-              Build a landing page, 6 sections, responsive, deliver in 10 days
-              for <span className="font-[var(--font-dm-mono)]">4.5 SOL</span>.
-            </div>
-
-            <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
-              <div className="text-[11px] font-semibold tracking-wide text-zinc-200/70">
-                Milestones
-              </div>
-              <div className="mt-3 grid gap-2">
-                <MilestoneCard
-                  label="Design system"
-                  value="1.0 SOL"
-                  status="Funded"
-                />
-                <MilestoneCard
-                  label="Implementation"
-                  value="2.5 SOL"
-                  status="In escrow"
-                />
-                <MilestoneCard
-                  label="QA + Handoff"
-                  value="1.0 SOL"
-                  status="Pending"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <div className="flex items-center justify-between">
-              <div className="text-[11px] font-semibold tracking-wide text-zinc-200/80">
-                Escrow status
-              </div>
-              <span
-                className="rounded-full px-3 py-1 text-[11px] font-semibold text-black"
-                style={{ backgroundColor: BRAND_TEAL }}
-              >
-                Secured
-              </span>
-            </div>
-
-            <div className="mt-3 rounded-xl border border-white/10 bg-black/30 p-4">
-              <div className="text-[11px] text-zinc-300/70">
-                Solana program vault
-              </div>
-              <div className="mt-1 text-lg font-semibold text-white">
-                <span className="font-[var(--font-dm-mono)]">4.5 SOL</span>{" "}
-                locked
-              </div>
-              <div className="mt-4 grid gap-3">
-                <KeyValue
-                  k="Client"
-                  v="8v8m…Jx3Q"
-                  mono
-                />
-                <KeyValue
-                  k="Freelancer"
-                  v="9fA3…kQ2V"
-                  mono
-                />
-                <KeyValue k="Release" v="On approval" />
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-xl border border-white/10 bg-black/30 p-4">
-              <div className="text-[11px] font-semibold tracking-wide text-zinc-200/70">
-                Approval queue
-              </div>
-              <div className="mt-3 space-y-2">
-                <QueueRow label="Design system" state="Approved" />
-                <QueueRow label="Implementation" state="In review" />
-                <QueueRow label="QA + Handoff" state="Waiting" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function KeyValue({
-  k,
-  v,
-  mono,
-}: {
-  k: string;
-  v: string;
-  mono?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-3">
-      <div className="text-xs text-zinc-300/70">{k}</div>
-      <div
-        className={[
-          "text-xs text-zinc-100/85",
-          mono ? "font-[var(--font-dm-mono)]" : "",
-        ].join(" ")}
-      >
-        {v}
-      </div>
-    </div>
-  );
-}
-
-function QueueRow({ label, state }: { label: string; state: string }) {
-  const color =
-    state === "Approved"
-      ? "rgba(29,158,117,0.22)"
-      : state === "In review"
-        ? "rgba(59,130,246,0.18)"
-        : "rgba(255,255,255,0.08)";
-
-  return (
-    <div className="flex items-center justify-between rounded-lg border border-white/10 bg-black/20 px-3 py-2">
-      <div className="text-xs text-zinc-200/80">{label}</div>
-      <span
-        className="rounded-full px-2.5 py-1 text-[11px] text-zinc-100/80"
-        style={{ backgroundColor: color }}
-      >
-        {state}
-      </span>
-    </div>
-  );
-}
-
-function MilestoneCard({
-  label,
-  value,
-  status,
-}: {
-  label: string;
-  value: string;
-  status: string;
-}) {
-  const statusTint =
-    status === "Funded"
-      ? "rgba(29,158,117,0.22)"
-      : status === "In escrow"
-        ? "rgba(29,158,117,0.14)"
-        : "rgba(255,255,255,0.08)";
-
-  return (
-    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-xs font-semibold text-zinc-100/85">{label}</div>
-        <div className="text-xs font-[var(--font-dm-mono)] text-zinc-100/80">
-          {value}
-        </div>
-      </div>
-      <div className="mt-2 flex items-center justify-between">
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-          <div
-            className="h-full rounded-full"
-            style={{
-              width: status === "Funded" ? "100%" : status === "In escrow" ? "66%" : "18%",
-              backgroundColor: BRAND_TEAL,
-              opacity: status === "Pending" ? 0.35 : 0.7,
-            }}
-          />
-        </div>
-        <span
-          className="ml-3 shrink-0 rounded-full px-2.5 py-1 text-[11px] text-zinc-100/80"
-          style={{ backgroundColor: statusTint }}
-        >
-          {status}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-// --- icons (simple inline SVG) ---
-function IconCheck() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M20 6L9 17l-5-5"
-        stroke="currentColor"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconShield() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9 12l2 2 4-5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconWriting() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0 0-3L16.5 4.5a2.1 2.1 0 0 0-3 0L3 15v5z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M13.5 6.5l4 4"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function IconLock() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M7 11V8a5 5 0 0 1 10 0v3"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 11h12v10H6V11z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconChecklist() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M9 6h11M9 12h11M9 18h11"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4.5 6.5l1 1 2-2"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.5 12.5l1 1 2-2"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M4.5 18.5l1 1 2-2"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconSend() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M22 2L11 13"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M22 2l-7 20-4-9-9-4 20-7z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function IconWallet() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M3 7h18v14H3V7z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M3 7V5a2 2 0 0 1 2-2h14"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M17 13h4v4h-4a2 2 0 0 1 0-4z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
+    </>
   );
 }
