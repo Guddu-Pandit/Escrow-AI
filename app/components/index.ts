@@ -1,0 +1,9 @@
+export { Navbar } from "./Navbar";
+export { Hero } from "./Hero";
+export { StatsBand } from "./StatsBand";
+export { HowItWorks } from "./HowItWorks";
+export { Features } from "./Features";
+export { Reviews } from "./Reviews";
+export { Pricing } from "./Pricing";
+export { CTABlock } from "./CTABlock";
+export { Footer } from "./Footer";
