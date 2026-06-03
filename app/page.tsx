@@ -126,19 +126,24 @@ export default function Home() {
         .band-val { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
         .band-val span { color: #1D9E75; }
         .band-lbl { font-size: 12px; color: rgba(255,255,255,0.35); }
-        .pricing-section { padding: 64px 40px; background: #0A1510; }
-        .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 520px; margin-top: 40px; }
-        .pcard { background: #0D1A14; border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 24px; }
-        .pcard-pro { border-color: rgba(29,158,117,0.35); background: #0B1810; }
-        .pcard-badge { display: inline-block; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600; color: #04342C; background: #5DCAA5; padding: 3px 9px; border-radius: 5px; margin-bottom: 12px; letter-spacing: 0.03em; }
-        .pcard-name { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-        .pcard-price { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
-        .pcard-price sub { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; }
-        .pcard-note { font-size: 11px; color: rgba(255,255,255,0.3); margin-bottom: 20px; }
-        .pcard-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
-        .pcard-feat { font-size: 12px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 7px; }
-        .pcard-feat i { color: #1D9E75; font-size: 13px; flex-shrink: 0; }
-        .pcard-btn { width: 100%; padding: 10px; border-radius: 8px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 0.02em; }
+        .pricing-section { padding: 80px 40px; background: #0A1510; text-align: center; }
+        .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 680px; margin: 44px auto 0; }
+        .pcard { background: #0D1A14; border: 1px solid rgba(255,255,255,0.09); border-radius: 18px; padding: 32px 28px; display: flex; flex-direction: column; text-align: left; transition: border-color 0.2s, transform 0.2s; }
+        .pcard:hover { transform: translateY(-3px); }
+        .pcard-pro { border-color: rgba(29,158,117,0.5); background: linear-gradient(165deg, #0B1810 0%, #0D1A14 100%); box-shadow: 0 0 0 1px rgba(29,158,117,0.18), 0 12px 40px rgba(0,0,0,0.4); position: relative; }
+        .pcard-badge { display: inline-flex; align-items: center; gap: 5px; font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; color: #04342C; background: #5DCAA5; padding: 4px 11px; border-radius: 20px; margin-bottom: 16px; letter-spacing: 0.04em; text-transform: uppercase; width: fit-content; }
+        .pcard-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.55); margin-bottom: 10px; letter-spacing: 0.01em; }
+        .pcard-pro .pcard-name { color: #fff; }
+        .pcard-price { font-family: 'Syne', sans-serif; font-size: 44px; font-weight: 800; color: #fff; letter-spacing: -1.5px; line-height: 1; margin-bottom: 6px; }
+        .pcard-price sub { font-size: 15px; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; }
+        .pcard-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 16px 0; }
+        .pcard-note { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 20px; }
+        .pcard-feats { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; flex: 1; }
+        .pcard-feat { font-size: 13px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 9px; line-height: 1.4; }
+        .pcard-feat i { color: #1D9E75; font-size: 14px; flex-shrink: 0; }
+        .pcard-pro .pcard-feat i { color: #5DCAA5; }
+        .pcard-btn { width: 100%; padding: 12px; border-radius: 10px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 0.02em; transition: opacity 0.2s; }
+        .pcard-btn:hover { opacity: 0.85; }
         .pb-outline { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.6); }
         .pb-solid { background: #1D9E75; border: none; color: #fff; }
         .cta-block { margin: 40px; background: #1D9E75; border-radius: 16px; padding: 52px 48px; text-align: center; }
@@ -369,12 +374,13 @@ export default function Home() {
         <section className="pricing-section">
           <div className="sec-eyebrow">Pricing</div>
           <h2 className="sec-h">Simple, transparent pricing.</h2>
-          <p className="sec-p" style={{marginTop: '8px'}}>We only earn when work gets done — 1.5% escrow fee on every successful payment release.</p>
+          <p className="sec-p" style={{marginTop: '8px', marginLeft: 'auto', marginRight: 'auto'}}>We only earn when work gets done — 1.5% escrow fee on every successful payment release.</p>
           <div className="pricing-grid">
             <div className="pcard">
               <div className="pcard-name">Free</div>
               <div className="pcard-price">$0 <sub>/ month</sub></div>
               <div className="pcard-note">+ 1.5% escrow fee per release</div>
+              <div className="pcard-divider"></div>
               <ul className="pcard-feats">
                 <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> 1 active contract</li>
                 <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> AI contract drafting</li>
@@ -384,10 +390,11 @@ export default function Home() {
               <button className="pcard-btn pb-outline">Start for free</button>
             </div>
             <div className="pcard pcard-pro">
-              <div className="pcard-badge">Most popular</div>
+              <div className="pcard-badge"><i className="ti ti-star-filled" style={{fontSize: '9px'}} aria-hidden="true"></i> Most popular</div>
               <div className="pcard-name">Pro</div>
               <div className="pcard-price">$9 <sub>/ month</sub></div>
               <div className="pcard-note">+ 1.5% escrow fee per release</div>
+              <div className="pcard-divider" style={{background: 'rgba(29,158,117,0.2)'}}></div>
               <ul className="pcard-feats">
                 <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Unlimited contracts</li>
                 <li className="pcard-feat"><i className="ti ti-check" aria-hidden="true"></i> Advanced AI tracking</li>
