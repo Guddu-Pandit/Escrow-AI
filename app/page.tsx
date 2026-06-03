@@ -185,7 +185,6 @@ export default function Home() {
             <span className="nav-link">Features</span>
             <span className="nav-link">Reviews</span>
             <span className="nav-link">Pricing</span>
-            <span className="nav-link">Docs</span>
           </div>
           <div className="nav-actions">
             <button className="btn-ghost"><i className="ti ti-wallet" style={{fontSize: '13px', verticalAlign: '-1px', marginRight: '4px'}} aria-hidden="true"></i> Connect Wallet</button>
@@ -270,6 +269,7 @@ export default function Home() {
         <section className="section section-alt">
           <div className="sec-eyebrow">How it works</div>
           <h2 className="sec-h">Four steps from agreement<br/>to payment.</h2>
+          <p className="sec-p" style={{marginTop: '8px', marginBottom: '0'}}>No legal jargon, no manual invoicing, no payment chasing. Just describe the work and let EscrowAI handle everything else.</p>
           <div className="steps-grid">
             <div className="step-box">
               <div className="step-num">01</div>
@@ -301,6 +301,7 @@ export default function Home() {
         <section className="section">
           <div className="sec-eyebrow">Features</div>
           <h2 className="sec-h">Built for the future<br/>of freelance work.</h2>
+          <p className="sec-p" style={{marginTop: '8px', marginBottom: '0'}}>Everything you need to work with confidence — for both clients and freelancers.</p>
           <div className="feat-grid">
             <div className="feat-card">
               <div className="feat-ico fi-teal"><i className="ti ti-writing" aria-hidden="true"></i></div>
@@ -415,7 +416,6 @@ export default function Home() {
           </div>
           <div className="footer-links">
             <span className="fl">About</span>
-            <span className="fl">Docs</span>
             <span className="fl">Twitter</span>
             <span className="fl">GitHub</span>
             <span className="fl">Privacy</span>
