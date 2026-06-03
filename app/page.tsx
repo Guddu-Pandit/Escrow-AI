@@ -105,6 +105,21 @@ export default function Home() {
         .bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
         .bar-fill { height: 100%; background: #1D9E75; border-radius: 3px; }
         .bar-count { font-size: 11px; color: rgba(255,255,255,0.3); width: 20px; text-align: right; font-family: 'DM Mono', monospace; }
+        .rv-eyebrow { font-size: 11px; font-weight: 600; color: #1ABC9C; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; font-family: 'Syne', sans-serif; }
+        .rv-h { font-family: 'Syne', sans-serif; font-size: 34px; font-weight: 700; color: #fff; letter-spacing: -0.6px; line-height: 1.2; margin-bottom: 8px; }
+        .rv-sub { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.75; max-width: 480px; font-weight: 300; margin-bottom: 40px; }
+        .rv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+        .rv-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 24px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+        .rv-quote { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.75; margin-bottom: 22px; font-style: italic; }
+        .rv-footer { display: flex; align-items: center; gap: 12px; }
+        .rv-av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; color: #fff; }
+        .rv-name { font-size: 14px; font-weight: 600; color: #fff; }
+        .rv-role { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+        .rv-metrics { display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; overflow: hidden; }
+        .rv-metric { padding: 28px 24px; text-align: center; border-right: 1px solid rgba(255,255,255,0.07); }
+        .rv-metric:last-child { border-right: none; }
+        .rv-metric-val { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: #1ABC9C; letter-spacing: -0.5px; margin-bottom: 4px; }
+        .rv-metric-lbl { font-size: 13px; color: rgba(255,255,255,0.4); }
         .stats-band { background: #0D1A14; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); display: grid; grid-template-columns: repeat(4, 1fr); }
         .band-stat { padding: 28px 20px; text-align: center; border-right: 1px solid rgba(255,255,255,0.06); }
         .band-stat:last-child { border-right: none; }
@@ -148,6 +163,9 @@ export default function Home() {
           .steps-grid { grid-template-columns: 1fr; }
           .feat-grid { grid-template-columns: 1fr; }
           .reviews-grid { grid-template-columns: 1fr; }
+          .rv-grid { grid-template-columns: 1fr; }
+          .rv-metrics { grid-template-columns: 1fr 1fr; }
+          .rv-metric { border-bottom: 1px solid rgba(255,255,255,0.07); }
           .stats-band { grid-template-columns: 1fr; }
           .band-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
           .pricing-grid { grid-template-columns: 1fr; }
@@ -317,82 +335,31 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="reviews-section">
-          <div style={{display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap', gap: '24px'}}>
-            <div>
-              <div className="sec-eyebrow">Reviews</div>
-              <h2 className="sec-h">Loved by 2,400+<br/>freelancers and clients.</h2>
-              <p className="sec-p" style={{marginTop: '8px'}}>Every review is wallet-verified. Only users who completed a contract can leave a rating.</p>
-            </div>
-            <div style={{display: 'flex', gap: '24px', alignItems: 'flex-start'}}>
-              <div>
-                <div style={{fontFamily: "'Syne', sans-serif", fontSize: '56px', fontWeight: 800, color: '#fff', letterSpacing: '-2px', lineHeight: 1}}>4.9</div>
-                <div style={{color: '#EF9F27', fontSize: '20px', letterSpacing: '2px', margin: '6px 0 4px'}}>★★★★★</div>
-                <div style={{fontSize: '12px', color: 'rgba(255,255,255,0.3)'}}>from 847 reviews</div>
-              </div>
-              <div style={{minWidth: '140px', paddingTop: '6px'}}>
-                <div className="bar-row"><span className="bar-label">5★</span><div className="bar-track"><div className="bar-fill" style={{width: '88%'}}></div></div><span className="bar-count">744</span></div>
-                <div className="bar-row"><span className="bar-label">4★</span><div className="bar-track"><div className="bar-fill" style={{width: '9%', background: '#9FE1CB'}}></div></div><span className="bar-count">76</span></div>
-                <div className="bar-row"><span className="bar-label">3★</span><div className="bar-track"><div className="bar-fill" style={{width: '2%', background: '#5DCAA5'}}></div></div><span className="bar-count">17</span></div>
-                <div className="bar-row"><span className="bar-label">2★</span><div className="bar-track"><div className="bar-fill" style={{width: '1%', background: '#444441'}}></div></div><span className="bar-count">7</span></div>
-                <div className="bar-row"><span className="bar-label">1★</span><div className="bar-track"><div className="bar-fill" style={{width: '0%'}}></div></div><span className="bar-count">3</span></div>
-              </div>
-            </div>
-          </div>
+        <section className="reviews-section" style={{padding: '72px 40px'}}>
+          <div className="rv-eyebrow">TRUSTED BY FREELANCERS</div>
+          <h2 className="rv-h">Loved by the people who use it.</h2>
+          <p className="rv-sub">From solo designers to dev agencies — TrustChain works for everyone.</p>
 
-          <div className="reviews-grid">
-            <div className="rcard rcard-featured">
-              <div className="rcard-platform">verified on-chain</div>
-              <div className="rcard-stars">★★★★★</div>
-              <p className="rcard-quote">"First time finishing a project without a single payment argument. The escrow just works — and the AI contract caught scope creep I would've missed completely."</p>
-              <div className="rcard-footer">
-                <div className="rcard-av" style={{background: '#1D4034', color: '#5DCAA5'}}>AR</div>
-                <div><div className="rcard-name">Aisha R.</div><div className="rcard-role">UI Designer · Lagos, NG · 12 contracts</div></div>
+          <div className="rv-grid">
+            <div className="rv-card">
+              <p className="rv-quote">"First time I've finished a project without a single payment argument. The escrow just works — and the AI contract caught scope creep I would've missed."</p>
+              <div className="rv-footer">
+                <div className="rv-av" style={{background: '#1D4034'}}>AR</div>
+                <div><div className="rv-name">Aisha R.</div><div className="rv-role">UI Designer, Lagos</div></div>
               </div>
             </div>
-            <div className="rcard">
-              <div className="rcard-platform">verified on-chain</div>
-              <div className="rcard-stars">★★★★★</div>
-              <p className="rcard-quote">"Hired 3 contractors last month through TrustChain. Set up each contract in 2 minutes, funds released automatically. It's genuinely the future of hiring remote talent."</p>
-              <div className="rcard-footer">
-                <div className="rcard-av" style={{background: '#0C2A47', color: '#378ADD'}}>MK</div>
-                <div><div className="rcard-name">Marcus K.</div><div className="rcard-role">Startup founder · Berlin, DE · 8 contracts</div></div>
+            <div className="rv-card">
+              <p className="rv-quote">"I hired 3 contractors last month all through TrustChain. Set up each contract in 2 minutes, funds released automatically. It's the future of hiring."</p>
+              <div className="rv-footer">
+                <div className="rv-av" style={{background: '#0C2A47'}}>MK</div>
+                <div><div className="rv-name">Marcus K.</div><div className="rv-role">Startup founder, Berlin</div></div>
               </div>
             </div>
-            <div className="rcard">
-              <div className="rcard-platform">verified on-chain</div>
-              <div className="rcard-stars">★★★★★</div>
-              <p className="rcard-quote">"As a dev I was skeptical, but the AI contract generation is genuinely impressive. It captured technical deliverables I wouldn't have known to explicitly include."</p>
-              <div className="rcard-footer">
-                <div className="rcard-av" style={{background: '#3D1A0C', color: '#D85A30'}}>JL</div>
-                <div><div className="rcard-name">Jade L.</div><div className="rcard-role">Full-stack dev · New York, US · 5 contracts</div></div>
-              </div>
-            </div>
-            <div className="rcard">
-              <div className="rcard-platform">verified on-chain</div>
-              <div className="rcard-stars">★★★★★</div>
-              <p className="rcard-quote">"The milestone tracking is what sold me. My client could see exactly what was approved and what wasn't — no ambiguity, no back-and-forth."</p>
-              <div className="rcard-footer">
-                <div className="rcard-av" style={{background: '#2A1940', color: '#7F77DD'}}>SP</div>
-                <div><div className="rcard-name">Siddharth P.</div><div className="rcard-role">Backend engineer · Mumbai, IN · 9 contracts</div></div>
-              </div>
-            </div>
-            <div className="rcard">
-              <div className="rcard-platform">verified on-chain</div>
-              <div className="rcard-stars">★★★★★</div>
-              <p className="rcard-quote">"Love that reviews are on-chain. When I hire someone and see 4.9 stars with 20 verified contracts, I actually trust it. No fake reviews possible."</p>
-              <div className="rcard-footer">
-                <div className="rcard-av" style={{background: '#1D3420', color: '#97C459'}}>TW</div>
-                <div><div className="rcard-name">Tara W.</div><div className="rcard-role">Product manager · Toronto, CA · 6 contracts</div></div>
-              </div>
-            </div>
-            <div className="rcard">
-              <div className="rcard-platform">verified on-chain</div>
-              <div className="rcard-stars">★★★★☆</div>
-              <p className="rcard-quote">"Took me 10 mins to figure out the wallet setup, but once connected it was smooth. Dispute resolution saved me when a client went silent — got my SOL back in 48 hours."</p>
-              <div className="rcard-footer">
-                <div className="rcard-av" style={{background: '#2A1A10', color: '#EF9F27'}}>OR</div>
-                <div><div className="rcard-name">Omar R.</div><div className="rcard-role">Motion designer · Dubai, AE · 3 contracts</div></div>
+            <div className="rv-card">
+              <p className="rv-quote">"As a dev, I was skeptical — but the contract generation is genuinely impressive. It captured technical deliverables I wouldn't have known to include."</p>
+              <div className="rv-footer">
+                <div className="rv-av" style={{background: '#8B5A2B'}}>JL</div>
+                <div><div className="rv-name">Jade L.</div><div className="rv-role">Full-stack developer, NYC</div></div>
               </div>
             </div>
           </div>
@@ -433,7 +400,7 @@ export default function Home() {
         </section>
 
         <div className="cta-block">
-          <h2 className="cta-h">Ready to work<br/>without worry?</h2>
+          <h2 className="cta-h">Ready to work without worry?</h2>
           <p className="cta-p">Join 2,400+ freelancers and clients who've left payment disputes behind for good.</p>
           <div className="cta-btns">
             <button className="btn-cta-white"><i className="ti ti-rocket" style={{fontSize: '14px', verticalAlign: '-2px', marginRight: '5px'}} aria-hidden="true"></i> Start for free</button>
