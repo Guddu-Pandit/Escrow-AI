@@ -24,7 +24,7 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TrustChain - AI contracts, Solana escrow, and verified freelancer reviews",
+  title: "EscrowAI - AI contracts, Solana escrow, and verified freelancer reviews",
   description: "Freelance work, secured by AI and blockchain. Describe your project in plain language. AI generates the contract, Solana locks the funds, and payment releases the moment milestones are approved.",
 };
 

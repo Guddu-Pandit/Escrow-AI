@@ -173,12 +173,12 @@ export default function Home() {
           .footer-links { flex-wrap: wrap; justify-content: center; }
         }
       `}</style>
-      <h2 className="sr-only">TrustChain homepage — AI contracts, Solana escrow, and verified freelancer reviews</h2>
+      <h2 className="sr-only">EscrowAI homepage — AI contracts, Solana escrow, and verified freelancer reviews</h2>
       <div className="tc">
         <nav className="nav">
           <div className="nav-logo">
             <div className="nav-logo-mark"><i className="ti ti-shield-check" aria-hidden="true"></i></div>
-            TrustChain
+            EscrowAI
           </div>
           <div className="nav-links">
             <span className="nav-link">How it works</span>
@@ -338,7 +338,7 @@ export default function Home() {
         <section className="reviews-section" style={{padding: '72px 40px'}}>
           <div className="rv-eyebrow">TRUSTED BY FREELANCERS</div>
           <h2 className="rv-h">Loved by the people who use it.</h2>
-          <p className="rv-sub">From solo designers to dev agencies — TrustChain works for everyone.</p>
+          <p className="rv-sub">From solo designers to dev agencies — EscrowAI works for everyone.</p>
 
           <div className="rv-grid">
             <div className="rv-card">
@@ -349,7 +349,7 @@ export default function Home() {
               </div>
             </div>
             <div className="rv-card">
-              <p className="rv-quote">"I hired 3 contractors last month all through TrustChain. Set up each contract in 2 minutes, funds released automatically. It's the future of hiring."</p>
+              <p className="rv-quote">"I hired 3 contractors last month all through EscrowAI. Set up each contract in 2 minutes, funds released automatically. It's the future of hiring."</p>
               <div className="rv-footer">
                 <div className="rv-av" style={{background: '#0C2A47'}}>MK</div>
                 <div><div className="rv-name">Marcus K.</div><div className="rv-role">Startup founder, Berlin</div></div>
@@ -411,7 +411,7 @@ export default function Home() {
         <footer className="footer">
           <div className="footer-logo">
             <div className="footer-lm"><i className="ti ti-shield-check" style={{fontSize: '12px'}} aria-hidden="true"></i></div>
-            TrustChain
+            EscrowAI
           </div>
           <div className="footer-links">
             <span className="fl">About</span>
