@@ -168,15 +168,6 @@ export const FOOTER_SECTIONS: FooterSection[] = [
     ],
   },
   {
-    title: "Resources",
-    links: [
-      { label: "Documentation", href: "#docs" },
-      { label: "Help Center", href: "#help" },
-      { label: "API", href: "#api" },
-      { label: "Status", href: "#status" },
-    ],
-  },
-  {
     title: "Legal",
     links: [
       { label: "Privacy Policy", href: "#privacy" },
