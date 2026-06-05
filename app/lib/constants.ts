@@ -143,4 +143,53 @@ export const PLANS: PricingPlan[] = [
 ];
 
 // ─── Footer ──────────────────────────────────────────────────────
-export const FOOTER_LINKS = ["About", "Twitter", "GitHub", "Privacy"] as const;
+export interface FooterSection {
+  title: string;
+  links: Array<{ label: string; href: string }>;
+}
+
+export const FOOTER_SECTIONS: FooterSection[] = [
+  {
+    title: "Product",
+    links: [
+      { label: "How it works", href: "#how-it-works" },
+      { label: "Features", href: "#features" },
+      { label: "Pricing", href: "#pricing" },
+      { label: "Reviews", href: "#reviews" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "About", href: "#about" },
+      { label: "Blog", href: "#blog" },
+      { label: "Careers", href: "#careers" },
+      { label: "Contact", href: "#contact" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Documentation", href: "#docs" },
+      { label: "Help Center", href: "#help" },
+      { label: "API", href: "#api" },
+      { label: "Status", href: "#status" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "#privacy" },
+      { label: "Terms of Service", href: "#terms" },
+      { label: "Cookie Policy", href: "#cookies" },
+      { label: "Security", href: "#security" },
+    ],
+  },
+] as const;
+
+export const SOCIAL_LINKS = [
+  { name: "Twitter", icon: "ti-brand-x", href: "https://twitter.com/escrowai" },
+  { name: "GitHub", icon: "ti-brand-github", href: "https://github.com/escrowai" },
+  { name: "Discord", icon: "ti-brand-discord", href: "https://discord.gg/escrowai" },
+  { name: "LinkedIn", icon: "ti-brand-linkedin", href: "https://linkedin.com/company/escrowai" },
+] as const;
