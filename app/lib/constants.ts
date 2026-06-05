@@ -17,7 +17,12 @@ export const COLORS = {
 } as const;
 
 // ─── Navigation ──────────────────────────────────────────────────
-export const NAV_LINKS = ["How it works", "Features", "Reviews", "Pricing"] as const;
+export const NAV_LINKS = [
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Features", href: "#features" },
+  { label: "Reviews", href: "#reviews" },
+  { label: "Pricing", href: "#pricing" },
+] as const;
 
 // ─── Hero ────────────────────────────────────────────────────────
 export const HERO = {

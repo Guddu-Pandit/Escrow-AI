@@ -4,7 +4,7 @@ import { STEPS } from "@/app/lib/constants";
 
 export function HowItWorks() {
   return (
-    <section className="py-16 px-10 bg-card-alt">
+    <section id="how-it-works" className="py-16 px-10 bg-card-alt">
       <div className="text-[11px] font-semibold text-brand tracking-widest uppercase mb-2 font-heading">
         How it works
       </div>

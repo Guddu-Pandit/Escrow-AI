@@ -10,7 +10,7 @@ const colorMap: Record<FeatureColor, { bg: string; text: string }> = {
 
 export function Features() {
   return (
-    <section className="py-16 px-10">
+    <section id="features" className="py-16 px-10">
       <div className="text-[11px] font-semibold text-brand tracking-widest uppercase mb-2 font-heading">
         Features
       </div>

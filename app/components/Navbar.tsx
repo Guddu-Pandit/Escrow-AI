@@ -16,12 +16,13 @@ export function Navbar() {
       {/* Links */}
       <div className="hidden md:flex gap-8">
         {NAV_LINKS.map((link) => (
-          <span
-            key={link}
-            className="text-[13px] text-white/45 cursor-pointer hover:text-white transition-colors tracking-wide"
+          <a
+            key={link.label}
+            href={link.href}
+            className="text-[13px] text-white/45 cursor-pointer hover:text-white transition-colors tracking-wide no-underline"
           >
-            {link}
-          </span>
+            {link.label}
+          </a>
         ))}
       </div>
 

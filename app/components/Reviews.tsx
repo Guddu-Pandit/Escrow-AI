@@ -4,7 +4,7 @@ import { REVIEWS } from "@/app/lib/constants";
 
 export function Reviews() {
   return (
-    <section className="py-[72px] px-10">
+    <section id="reviews" className="py-[72px] px-10">
       {/* Header */}
       <div className="text-[11px] font-semibold text-[#1ABC9C] tracking-widest uppercase mb-2.5 font-heading">
         TRUSTED BY FREELANCERS

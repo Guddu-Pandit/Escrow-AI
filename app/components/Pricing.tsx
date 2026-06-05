@@ -4,7 +4,7 @@ import { PLANS } from "@/app/lib/constants";
 
 export function Pricing() {
   return (
-    <section className="py-20 px-10 bg-card-alt text-center">
+    <section id="pricing" className="py-20 px-10 bg-card-alt text-center">
       <div className="text-[11px] font-semibold text-brand tracking-widest uppercase mb-2 font-heading">
         Pricing
       </div>
